@@ -1,20 +1,52 @@
+import numpy
+import scipy.special
+
+# neural network class definition
+# from book <Make Your Own Neural Network>
 class NeuralNetwork:
 
     def __init__(self, inputNodes, hiddennodes, outputnodes, learningrate):
         self.inode = inputNodes
         self.hnodes = hiddennodes
         self.onodes = outputnodes
-
+        
         self.lr = learningrate
+
+        # wih: weights of input_hidden
+        # who: weights of hidden_output 
+        self.wih = numpy.random.normal(0.0, pow(self.hnodes, -0.5), (self.hnodes, self.inode))
+        self.who = numpy.random.normal(0.0, pow(self.onodes, -0.5), (self.onodes, self.hnodes))
+
+        # activation function is the sigmoid function
+        self.activation_function = lambda x: scipy.special.expit(x)
+
         pass
 
     def train(self):
         pass
 
 
-    def query(self):
+    def query(self, inputs_list):
+        inputs = numpy.array(inputs_list, ndmin=2).T
+        hidden_inputs = numpy.dot(self.wih, inputs)
+        hidden_outputs = self.activation_function(hidden_inputs)
+
+        final_inputs = numpy.dot(self.who, hidden_outputs)
+        final_outputs = self.activation_function(hidden_inputs)
+        return final_outputs
         pass
 
 if __name__ == "__main__":
     print("hello world")
-    nn = NeuralNetwork(3,3,3,3)
+
+    input_nodes = 3
+    hidden_nodes = 3
+    output_nodes = 3
+
+    learning_rate = 0.3
+
+    nn = NeuralNetwork(input_nodes, hidden_nodes, output_nodes, learning_rate)
+
+    print(nn.query([1.0, 0.5, -1.5]))
+
+    print("end.")
